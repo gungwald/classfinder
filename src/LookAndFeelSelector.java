@@ -19,7 +19,8 @@ import java.awt.Insets;
 
 public class LookAndFeelSelector extends JDialog {
     
-	private String selectedPlafClassName = null;
+    private static final long serialVersionUID = 1L;
+    private String selectedPlafClassName = null;
 	private JComboBox comboBox;
     private LookAndFeelInfo[] plafInfos = null;
     private String[] plafNames = null;
@@ -80,7 +81,6 @@ public class LookAndFeelSelector extends JDialog {
 		}
 		{
 			JPanel panel = new JPanel();
-			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			getContentPane().add(panel, BorderLayout.CENTER);
 			{
 				JLabel lblNewLabel = new JLabel("Select Look and Feel:");
