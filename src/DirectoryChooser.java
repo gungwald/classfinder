@@ -11,7 +11,7 @@ public class DirectoryChooser extends JFileChooser {
     
 	public DirectoryChooser(String title) {
 		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        setApproveButtonText("Select");
+        setApproveButtonText("Choose");
         setDialogTitle(title);
 	}
     

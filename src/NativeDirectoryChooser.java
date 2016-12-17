@@ -3,7 +3,7 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 
-public class DirectoryChooserAwt extends FileDialog {
+public class NativeDirectoryChooser extends FileDialog {
 
 	private static final long serialVersionUID = 1L;
 
@@ -15,8 +15,8 @@ public class DirectoryChooserAwt extends FileDialog {
         System.setProperty("apple.awt.fileDialogForDirectories", "true");
     }
     
-	public DirectoryChooserAwt(Frame parent) {
-		super(parent, "Select search directory", FileDialog.LOAD);
+	public NativeDirectoryChooser(Frame parent, String title) {
+		super(parent, title, FileDialog.LOAD);
 	}
 
 	public String chooseDirectory() {
@@ -33,9 +33,9 @@ public class DirectoryChooserAwt extends FileDialog {
 		// public void run() {
 		// awtDirectorySelector.toFront();
 		// awtDirectorySelector.repaint();
-		File[] files = getFiles();
-		if (files.length > 0) {
-			f = files[0];
+		String file = getFile();
+		if (file != null) {
+			f = new File(file);
 			if (f.isFile()) {
 				f = f.getParentFile();
 			}
