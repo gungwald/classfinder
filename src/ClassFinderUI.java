@@ -10,6 +10,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -38,17 +40,20 @@ public class ClassFinderUI {
     private DirectoryChooser directoryChooser;
     private NativeDirectoryChooser nativeDirectoryChooser;
     private JComboBox directoryBox;
-    private JTable table;
+    private JTable resultTable;
     private LookAndFeelManager lookAndFeelManager;
+    private ClassFinder classFinder;
+    private JLabel statusBar;
+    private JComboBox searchBox;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
         // Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
-        System.setProperty("awt.useSystemAAFontSettings","lcd");
+        System.setProperty("awt.useSystemAAFontSettings", "lcd");
         System.setProperty("swing.aatext", "true");
-        
+
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -71,6 +76,10 @@ public class ClassFinderUI {
         nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
         lookAndFeelManager = new LookAndFeelManager();
         lookAndFeelManager.initChooserMenuItems(mnLookFeel, buttonGroup, mainFrame, directoryChooser);
+        classFinder = new ClassFinder(getResultTable(), getStatusBar());
+        resultTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        resultTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+        resultTable.getColumnModel().getColumn(3).setPreferredWidth(50);
     }
 
     /**
@@ -142,7 +151,7 @@ public class ClassFinderUI {
         gbc_browseButton.gridy = 0;
         parameterPanel.add(browseButton, gbc_browseButton);
 
-        JComboBox searchBox = new JComboBox();
+        searchBox = new JComboBox();
         searchBox.setEditable(true);
         searchBox.setPreferredSize(new Dimension(32, 40));
         GridBagConstraints gbc_searchBox = new GridBagConstraints();
@@ -162,26 +171,36 @@ public class ClassFinderUI {
         gbc_searchLabel.gridx = 0;
         gbc_searchLabel.gridy = 1;
         parameterPanel.add(searchLabel, gbc_searchLabel);
-        
-                JButton searchButton = new JButton("Search");
-                searchButton.setPreferredSize(new Dimension(95, 40));
-                GridBagConstraints gbc_searchButton = new GridBagConstraints();
-                gbc_searchButton.insets = new Insets(0, 0, 0, 5);
-                gbc_searchButton.gridx = 1;
-                gbc_searchButton.gridy = 2;
-                parameterPanel.add(searchButton, gbc_searchButton);
 
-        JLabel lblReady = new JLabel("Ready");
-        lblReady.setPreferredSize(new Dimension(44, 25));
-        mainPanel.add(lblReady, BorderLayout.SOUTH);
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getResultTable().setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" }));
+                File searchIn = new File(directoryBox.getSelectedItem().toString());
+                Pattern searchPattern = Pattern.compile(getSearchBox().getSelectedItem().toString(), Pattern.CASE_INSENSITIVE);
+                classFinder.find(searchIn, searchPattern);
+                getStatusBar().setText("Ready");
+            }
+        });
+        searchButton.setPreferredSize(new Dimension(95, 40));
+        GridBagConstraints gbc_searchButton = new GridBagConstraints();
+        gbc_searchButton.insets = new Insets(0, 0, 5, 0);
+        gbc_searchButton.gridx = 2;
+        gbc_searchButton.gridy = 1;
+        parameterPanel.add(searchButton, gbc_searchButton);
+
+        statusBar = new JLabel("Ready");
+        statusBar.setPreferredSize(new Dimension(44, 25));
+        mainPanel.add(statusBar, BorderLayout.SOUTH);
 
         JScrollPane resultTableScrollPane = new JScrollPane();
         mainPanel.add(resultTableScrollPane, BorderLayout.CENTER);
 
-        table = new JTable();
-        table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" }));
+        resultTable = new JTable();
+        resultTable.setCellSelectionEnabled(true);
+        resultTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" }));
         // //table.setFillsViewportHeight(true);
-        resultTableScrollPane.setViewportView(table);
+        resultTableScrollPane.setViewportView(resultTable);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.setPreferredSize(new Dimension(0, 35));
@@ -245,5 +264,14 @@ public class ClassFinderUI {
         point.x = dim.width / 2 - component.getWidth() / 2;
         point.y = dim.height / 2 - component.getHeight() / 2;
         return point;
+    }
+    protected JTable getResultTable() {
+        return resultTable;
+    }
+    protected JLabel getStatusBar() {
+        return statusBar;
+    }
+    protected JComboBox getSearchBox() {
+        return searchBox;
     }
 }
