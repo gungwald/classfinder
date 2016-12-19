@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class JavaClassResultsTableModel extends DefaultTableModel {
 
+    private static final long serialVersionUID = 1L;
+
     public JavaClassResultsTableModel() {
         // TODO Auto-generated constructor stub
     }
