@@ -34,7 +34,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class ClassFinderUI {
+public class ClassFinder {
 
     private JFrame mainFrame;
     private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -62,7 +62,7 @@ public class ClassFinderUI {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    ClassFinderUI window = new ClassFinderUI();
+                    ClassFinder window = new ClassFinder();
                     window.mainFrame.setVisible(true);
                 }
                 catch (Exception e) {
@@ -75,7 +75,7 @@ public class ClassFinderUI {
     /**
      * Create the application.
      */
-    public ClassFinderUI() {
+    public ClassFinder() {
         initialize();
         directoryChooser = new DirectoryChooser("Select search directory");
         nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
@@ -88,7 +88,7 @@ public class ClassFinderUI {
      */
     private void initialize() {
         mainFrame = new JFrame();
-        mainFrame.setTitle("Class Finder");
+        mainFrame.setTitle("ClassFinder");
         mainFrame.setBounds(100, 100, 780, 427);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.getContentPane().setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.X_AXIS));
