@@ -4,7 +4,6 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -70,5 +69,19 @@ public class ClassVersionExtractor {
             close(in);
         }
         return ver;
+    }
+
+    /**
+     * @return the javaFilter
+     */
+    public FileFilter getJavaFilter() {
+        return javaFilter;
+    }
+
+    /**
+     * @param javaFilter the javaFilter to set
+     */
+    public void setJavaFilter(FileFilter javaFilter) {
+        this.javaFilter = javaFilter;
     }
 }

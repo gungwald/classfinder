@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class ClassFinder extends Thread {
+public class ClassFinderThread extends Thread {
 
     private JTable results;
     private JLabel statusBar;
@@ -21,7 +21,7 @@ public class ClassFinder extends Thread {
     private File startDirectory;
     private Pattern searchPattern;
 
-    public ClassFinder() {
+    public ClassFinderThread() {
         javaFileFilter = new JavaFileFilter();
         versionExtractor = new ClassVersionExtractor();
     }
