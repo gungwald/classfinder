@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Rectangle;
 
 public class ClassFinder {
 
@@ -81,6 +82,8 @@ public class ClassFinder {
         nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
         lookAndFeelManager = new LookAndFeelManager();
         lookAndFeelManager.initChooserMenuItems(mnLookFeel, buttonGroup, mainFrame, directoryChooser);
+        //resultTable.setModel(new SearchResultsTableModel());
+        resultTable.setColumnModel(new SearchResultsTableColumnModel());
     }
 
     /**
@@ -99,7 +102,7 @@ public class ClassFinder {
         mainPanel.setLayout(new BorderLayout(10, 20));
 
         JPanel parameterPanel = new JPanel();
-        parameterPanel.setBorder(new TitledBorder(new CompoundBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), new EmptyBorder(10, 10, 10, 10)), "Search Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+        parameterPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Search Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
         mainPanel.add(parameterPanel, BorderLayout.NORTH);
         GridBagLayout gbl_parameterPanel = new GridBagLayout();
         gbl_parameterPanel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
@@ -112,8 +115,8 @@ public class ClassFinder {
         directoryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         directoryLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         GridBagConstraints gbc_directoryLabel = new GridBagConstraints();
+        gbc_directoryLabel.insets = new Insets(10, 10, 0, 0);
         gbc_directoryLabel.anchor = GridBagConstraints.EAST;
-        gbc_directoryLabel.insets = new Insets(0, 0, 5, 5);
         gbc_directoryLabel.gridx = 0;
         gbc_directoryLabel.gridy = 0;
         parameterPanel.add(directoryLabel, gbc_directoryLabel);
@@ -121,12 +124,14 @@ public class ClassFinder {
         directoryBox = new JComboBox();
         directoryBox.setEditable(true);
         GridBagConstraints gbc_directoryBox = new GridBagConstraints();
+        gbc_directoryBox.insets = new Insets(10, 5, 0, 5);
         gbc_directoryBox.fill = GridBagConstraints.HORIZONTAL;
         gbc_directoryBox.gridx = 1;
         gbc_directoryBox.gridy = 0;
         parameterPanel.add(directoryBox, gbc_directoryBox);
 
         JButton browseButton = new JButton("Browse");
+        browseButton.setPreferredSize(new Dimension(90, 25));
         browseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         browseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -144,7 +149,7 @@ public class ClassFinder {
             }
         });
         GridBagConstraints gbc_browseButton = new GridBagConstraints();
-        gbc_browseButton.insets = new Insets(0, 0, 3, 0);
+        gbc_browseButton.insets = new Insets(10, 0, 0, 10);
         gbc_browseButton.gridx = 2;
         gbc_browseButton.gridy = 0;
         parameterPanel.add(browseButton, gbc_browseButton);
@@ -160,6 +165,7 @@ public class ClassFinder {
         });
         searchBox.setEditable(true);
         GridBagConstraints gbc_searchBox = new GridBagConstraints();
+        gbc_searchBox.insets = new Insets(0, 5, 10, 5);
         gbc_searchBox.fill = GridBagConstraints.HORIZONTAL;
         gbc_searchBox.gridx = 1;
         gbc_searchBox.gridy = 1;
@@ -169,13 +175,14 @@ public class ClassFinder {
         searchLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         searchLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         GridBagConstraints gbc_searchLabel = new GridBagConstraints();
+        gbc_searchLabel.insets = new Insets(0, 0, 10, 0);
         gbc_searchLabel.anchor = GridBagConstraints.EAST;
-        gbc_searchLabel.insets = new Insets(0, 0, 5, 5);
         gbc_searchLabel.gridx = 0;
         gbc_searchLabel.gridy = 1;
         parameterPanel.add(searchLabel, gbc_searchLabel);
 
         searchButton = new JButton("Search");
+        searchButton.setPreferredSize(new Dimension(90, 25));
         searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -183,7 +190,7 @@ public class ClassFinder {
             }
         });
         GridBagConstraints gbc_searchButton = new GridBagConstraints();
-        gbc_searchButton.insets = new Insets(0, 0, 3, 0);
+        gbc_searchButton.insets = new Insets(0, 0, 10, 10);
         gbc_searchButton.gridx = 2;
         gbc_searchButton.gridy = 1;
         parameterPanel.add(searchButton, gbc_searchButton);

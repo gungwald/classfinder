@@ -8,9 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 public class ClassFinderThread extends Thread {
 
@@ -27,23 +25,6 @@ public class ClassFinderThread extends Thread {
     }
     
     public void run() {
-        ((DefaultTableModel) results.getModel()).setDataVector(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" });
-        
-        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-        center.setHorizontalAlignment(JLabel.CENTER);
-        
-        TableColumnModel resultColumnModel = results.getColumnModel();
-        resultColumnModel.getColumn(0).setMinWidth(10);
-        resultColumnModel.getColumn(0).setPreferredWidth(30);
-        resultColumnModel.getColumn(1).setMinWidth(10);
-        resultColumnModel.getColumn(1).setPreferredWidth(400);
-        resultColumnModel.getColumn(1).setMaxWidth(Integer.MAX_VALUE);
-        resultColumnModel.getColumn(2).setMinWidth(10);
-        resultColumnModel.getColumn(2).setPreferredWidth(30);
-        resultColumnModel.getColumn(2).setCellRenderer(center);
-        resultColumnModel.getColumn(3).setMinWidth(10);
-        resultColumnModel.getColumn(3).setPreferredWidth(30);
-        resultColumnModel.getColumn(3).setCellRenderer(center);
         find(startDirectory, searchPattern);
         updateStatusBar("Ready");
     }

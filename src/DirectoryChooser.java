@@ -10,6 +10,7 @@ public class DirectoryChooser extends JFileChooser {
 	private static final long serialVersionUID = 1L;
     
 	public DirectoryChooser(String title) {
+        super();
 		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         setApproveButtonText("Choose");
         setDialogTitle(title);
