@@ -28,12 +28,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Rectangle;
+import javax.swing.table.TableColumnModel;
 
 public class ClassFinder {
 
@@ -82,10 +82,30 @@ public class ClassFinder {
         nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
         lookAndFeelManager = new LookAndFeelManager();
         lookAndFeelManager.initChooserMenuItems(mnLookFeel, buttonGroup, mainFrame, directoryChooser);
-        //resultTable.setModel(new SearchResultsTableModel());
-        resultTable.setColumnModel(new SearchResultsTableColumnModel());
+        initResultTable();
     }
 
+    /**
+     * Ideally the column widths should be stored and retrieved across
+     * invocations.
+     */
+    protected void initResultTable() {
+        DefaultTableCellRenderer centeredCellRenderer = new DefaultTableCellRenderer();
+        centeredCellRenderer.setHorizontalAlignment(JLabel.CENTER);
+        TableColumnModel resultColumnModel = resultTable.getColumnModel();
+        resultColumnModel.getColumn(0).setMinWidth(10);
+        resultColumnModel.getColumn(0).setPreferredWidth(30);
+        resultColumnModel.getColumn(1).setMinWidth(10);
+        resultColumnModel.getColumn(1).setPreferredWidth(400);
+        resultColumnModel.getColumn(1).setMaxWidth(Integer.MAX_VALUE);
+        resultColumnModel.getColumn(2).setMinWidth(10);
+        resultColumnModel.getColumn(2).setPreferredWidth(30);
+        resultColumnModel.getColumn(2).setCellRenderer(centeredCellRenderer);
+        resultColumnModel.getColumn(3).setMinWidth(10);
+        resultColumnModel.getColumn(3).setPreferredWidth(30);
+        resultColumnModel.getColumn(3).setCellRenderer(centeredCellRenderer);
+    }
+    
     /**
      * Initialize the contents of the frame.
      */
@@ -131,7 +151,7 @@ public class ClassFinder {
         parameterPanel.add(directoryBox, gbc_directoryBox);
 
         JButton browseButton = new JButton("Browse");
-        browseButton.setPreferredSize(new Dimension(90, 25));
+        browseButton.setPreferredSize(new Dimension(90, 29));
         browseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         browseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -155,6 +175,11 @@ public class ClassFinder {
         parameterPanel.add(browseButton, gbc_browseButton);
 
         searchBox = new JComboBox();
+        searchBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                startSearch();
+            }
+        });
         searchBox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent event) {
@@ -182,7 +207,7 @@ public class ClassFinder {
         parameterPanel.add(searchLabel, gbc_searchLabel);
 
         searchButton = new JButton("Search");
-        searchButton.setPreferredSize(new Dimension(90, 25));
+        searchButton.setPreferredSize(new Dimension(90, 29));
         searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -195,17 +220,46 @@ public class ClassFinder {
         gbc_searchButton.gridy = 1;
         parameterPanel.add(searchButton, gbc_searchButton);
 
-        statusBar = new JLabel("Ready");
-        mainPanel.add(statusBar, BorderLayout.SOUTH);
-
         JScrollPane resultTableScrollPane = new JScrollPane();
         mainPanel.add(resultTableScrollPane, BorderLayout.CENTER);
 
         resultTable = new JTable();
         resultTable.setCellSelectionEnabled(true);
         resultTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" }));
-        // //table.setFillsViewportHeight(true);
+        //resultTable.setFillsViewportHeight(true);
         resultTableScrollPane.setViewportView(resultTable);
+        
+        JPanel statusPanel = new JPanel();
+        mainPanel.add(statusPanel, BorderLayout.SOUTH);
+                GridBagLayout gbl_statusPanel = new GridBagLayout();
+                gbl_statusPanel.columnWidths = new int[]{37, 0, 0};
+                gbl_statusPanel.rowHeights = new int[]{16, 0};
+                gbl_statusPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+                gbl_statusPanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+                statusPanel.setLayout(gbl_statusPanel);
+                
+                        statusBar = new JLabel("Ready");
+                        GridBagConstraints gbc_statusBar = new GridBagConstraints();
+                        gbc_statusBar.weightx = 1.0;
+                        gbc_statusBar.fill = GridBagConstraints.HORIZONTAL;
+                        gbc_statusBar.insets = new Insets(0, 0, 0, 5);
+                        gbc_statusBar.anchor = GridBagConstraints.WEST;
+                        gbc_statusBar.gridx = 0;
+                        gbc_statusBar.gridy = 0;
+                        statusPanel.add(statusBar, gbc_statusBar);
+                        
+                        JButton stopButton = new JButton("Stop");
+                        stopButton.addKeyListener(new KeyAdapter() {
+                            @Override
+                            public void keyTyped(KeyEvent e) {
+                                
+                            }
+                        });
+                        stopButton.setVisible(false);
+                        GridBagConstraints gbc_stopButton = new GridBagConstraints();
+                        gbc_stopButton.gridx = 1;
+                        gbc_stopButton.gridy = 0;
+                        statusPanel.add(stopButton, gbc_stopButton);
 
         JMenuBar menuBar = new JMenuBar();
         mainFrame.setJMenuBar(menuBar);

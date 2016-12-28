@@ -1,3 +1,4 @@
+import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
@@ -25,8 +26,10 @@ public class ClassFinderThread extends Thread {
     }
     
     public void run() {
+        results.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         find(startDirectory, searchPattern);
         updateStatusBar("Ready");
+        results.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
     
     public void find(File searchIn, Pattern whatToFind) {
