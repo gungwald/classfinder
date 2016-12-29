@@ -49,6 +49,7 @@ public class ClassFinder {
     private JLabel statusBar;
     private JComboBox searchBox;
     private JButton searchButton;
+    private JButton stopButton;
 
     /**
      * Launch the application.
@@ -57,7 +58,8 @@ public class ClassFinder {
         // Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
         System.setProperty("awt.useSystemAAFontSettings", "lcd");
         System.setProperty("swing.aatext", "true");
-        // Put the main menu at the top on a Mac because that where is should be.
+        // Put the main menu at the top on a Mac because that where is should
+        // be.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
         EventQueue.invokeLater(new Runnable() {
@@ -105,7 +107,7 @@ public class ClassFinder {
         resultColumnModel.getColumn(3).setPreferredWidth(30);
         resultColumnModel.getColumn(3).setCellRenderer(centeredCellRenderer);
     }
-    
+
     /**
      * Initialize the contents of the frame.
      */
@@ -226,40 +228,46 @@ public class ClassFinder {
         resultTable = new JTable();
         resultTable.setCellSelectionEnabled(true);
         resultTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" }));
-        //resultTable.setFillsViewportHeight(true);
+        // resultTable.setFillsViewportHeight(true);
         resultTableScrollPane.setViewportView(resultTable);
-        
+
         JPanel statusPanel = new JPanel();
         mainPanel.add(statusPanel, BorderLayout.SOUTH);
-                GridBagLayout gbl_statusPanel = new GridBagLayout();
-                gbl_statusPanel.columnWidths = new int[]{37, 0, 0};
-                gbl_statusPanel.rowHeights = new int[]{16, 0};
-                gbl_statusPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-                gbl_statusPanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-                statusPanel.setLayout(gbl_statusPanel);
-                
-                        statusBar = new JLabel("Ready");
-                        GridBagConstraints gbc_statusBar = new GridBagConstraints();
-                        gbc_statusBar.weightx = 1.0;
-                        gbc_statusBar.fill = GridBagConstraints.HORIZONTAL;
-                        gbc_statusBar.insets = new Insets(0, 0, 0, 5);
-                        gbc_statusBar.anchor = GridBagConstraints.WEST;
-                        gbc_statusBar.gridx = 0;
-                        gbc_statusBar.gridy = 0;
-                        statusPanel.add(statusBar, gbc_statusBar);
-                        
-                        JButton stopButton = new JButton("Stop");
-                        stopButton.addKeyListener(new KeyAdapter() {
-                            @Override
-                            public void keyTyped(KeyEvent e) {
-                                
-                            }
-                        });
-                        stopButton.setVisible(false);
-                        GridBagConstraints gbc_stopButton = new GridBagConstraints();
-                        gbc_stopButton.gridx = 1;
-                        gbc_stopButton.gridy = 0;
-                        statusPanel.add(stopButton, gbc_stopButton);
+        GridBagLayout gbl_statusPanel = new GridBagLayout();
+        gbl_statusPanel.columnWidths = new int[] { 37, 0, 0 };
+        gbl_statusPanel.rowHeights = new int[] { 16, 0 };
+        gbl_statusPanel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+        gbl_statusPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+        statusPanel.setLayout(gbl_statusPanel);
+
+        statusBar = new JLabel("Ready");
+        GridBagConstraints gbc_statusBar = new GridBagConstraints();
+        gbc_statusBar.weightx = 1.0;
+        gbc_statusBar.fill = GridBagConstraints.HORIZONTAL;
+        gbc_statusBar.insets = new Insets(0, 0, 0, 5);
+        gbc_statusBar.anchor = GridBagConstraints.WEST;
+        gbc_statusBar.gridx = 0;
+        gbc_statusBar.gridy = 0;
+        statusPanel.add(statusBar, gbc_statusBar);
+
+        stopButton = new JButton("Stop");
+        stopButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                classFinder.setStopRequested(true);
+                stopButton.setVisible(false);
+            }
+        });
+        stopButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+        });
+        stopButton.setVisible(false);
+        GridBagConstraints gbc_stopButton = new GridBagConstraints();
+        gbc_stopButton.gridx = 1;
+        gbc_stopButton.gridy = 0;
+        statusPanel.add(stopButton, gbc_stopButton);
 
         JMenuBar menuBar = new JMenuBar();
         mainFrame.setJMenuBar(menuBar);
@@ -304,7 +312,8 @@ public class ClassFinder {
     }
 
     protected void startSearch() {
-        ClassFinderThread classFinder = new ClassFinderThread();
+        stopButton.setVisible(true);
+        classFinder = new ClassFinderThread();
         classFinder.setResults(getResultTable());
         classFinder.setStatusBar(getStatusBar());
         classFinder.setStartDirectory(new File(directoryBox.getSelectedItem().toString()));
@@ -341,6 +350,7 @@ public class ClassFinder {
     protected JComboBox getSearchBox() {
         return searchBox;
     }
+
     protected JButton getSearchButton() {
         return searchButton;
     }
@@ -357,5 +367,9 @@ public class ClassFinder {
      */
     public void setClassFinder(ClassFinderThread classFinder) {
         this.classFinder = classFinder;
+    }
+
+    public JButton getStopButton() {
+        return stopButton;
     }
 }

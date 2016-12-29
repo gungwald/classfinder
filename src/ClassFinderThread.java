@@ -19,20 +19,24 @@ public class ClassFinderThread extends Thread {
     private ClassVersionExtractor versionExtractor;
     private File startDirectory;
     private Pattern searchPattern;
+    private boolean stopRequested = false;
 
     public ClassFinderThread() {
         javaFileFilter = new JavaFileFilter();
         versionExtractor = new ClassVersionExtractor();
     }
-    
+
     public void run() {
         results.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         find(startDirectory, searchPattern);
         updateStatusBar("Ready");
         results.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
-    
+
     public void find(File searchIn, Pattern whatToFind) {
+        if (isStopRequested()) {
+            return;
+        }
         try {
             if (searchIn.isDirectory()) {
                 updateStatusBar("Searching " + searchIn.getAbsolutePath());
@@ -46,7 +50,7 @@ public class ClassFinderThread extends Thread {
                 updateStatusBar("Searching " + jarFile.getName());
                 for (JarEntry entry : Collections.list(jarFile.entries())) {
                     String name = entry.getName();
-                    if (! entry.isDirectory() && name.endsWith(".class") && whatToFind.matcher(name).find()) {
+                    if (!entry.isDirectory() && name.endsWith(".class") && whatToFind.matcher(name).find()) {
                         addResultRow(jarFile, entry);
                     }
                 }
@@ -81,7 +85,7 @@ public class ClassFinderThread extends Thread {
         row[3] = String.valueOf(version.getProductVersion());
         addResultRow(row);
     }
-    
+
     protected void addResultRow(final String[] row) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -93,11 +97,25 @@ public class ClassFinderThread extends Thread {
     protected void updateStatusBar(final String message) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                statusBar.setText(message);
+                int characterWidth = (int) (statusBar.getSize().getWidth() / 10);
+                String truncatedMessage = truncate(message, characterWidth);
+                // Adding html tags for wrapping screws up the UI updating.
+                statusBar.setText(truncatedMessage);
             }
         });
     }
-    
+
+    private String truncate(final String message, int max) {
+        String truncatedMessage;
+        if (message.length() <= max) {
+            truncatedMessage = message;
+        }
+        else {
+            truncatedMessage = message.substring(0, max);
+        }
+        return truncatedMessage;
+    }
+
     /**
      * @return the startDirectory
      */
@@ -140,6 +158,14 @@ public class ClassFinderThread extends Thread {
 
     public void setStatusBar(JLabel statusBar) {
         this.statusBar = statusBar;
+    }
+
+    public void setStopRequested(boolean stopRequested) {
+        this.stopRequested = stopRequested;
+    }
+
+    public boolean isStopRequested() {
+        return stopRequested;
     }
 
 }
