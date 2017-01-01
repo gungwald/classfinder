@@ -7,6 +7,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -20,17 +21,35 @@ public class ClassFinderThread extends Thread {
     private File startDirectory;
     private Pattern searchPattern;
     private boolean stopRequested = false;
+	private JButton stopButton;
 
     public ClassFinderThread() {
         javaFileFilter = new JavaFileFilter();
         versionExtractor = new ClassVersionExtractor();
     }
 
+    public void setupForFind() {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+            	results.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            }
+        });
+    }
+    
+    public void cleanUpAfterFind() {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+            	updateStatusBar("Ready");
+            	results.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                stopButton.setVisible(false);
+            }
+        });
+    }
+    
     public void run() {
-        results.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        setupForFind();
         find(startDirectory, searchPattern);
-        updateStatusBar("Ready");
-        results.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        cleanUpAfterFind();
     }
 
     public void find(File searchIn, Pattern whatToFind) {
@@ -97,7 +116,7 @@ public class ClassFinderThread extends Thread {
     protected void updateStatusBar(final String message) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                int characterWidth = (int) (statusBar.getSize().getWidth() / 10);
+                int characterWidth = (int) (statusBar.getSize().getWidth() / 5);
                 String truncatedMessage = truncate(message, characterWidth);
                 // Adding html tags for wrapping screws up the UI updating.
                 statusBar.setText(truncatedMessage);
@@ -167,5 +186,9 @@ public class ClassFinderThread extends Thread {
     public boolean isStopRequested() {
         return stopRequested;
     }
+
+	public void setStopButton(JButton stopButton) {
+		this.stopButton = stopButton;
+	}
 
 }

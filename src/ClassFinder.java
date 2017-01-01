@@ -39,7 +39,7 @@ public class ClassFinder {
 
     private JFrame mainFrame;
     private final ButtonGroup buttonGroup = new ButtonGroup();
-    private JMenu mnLookFeel;
+    private JMenu lookAndFeelMenu;
     private DirectoryChooser directoryChooser;
     private NativeDirectoryChooser nativeDirectoryChooser;
     private JComboBox directoryBox;
@@ -55,6 +55,8 @@ public class ClassFinder {
      * Launch the application.
      */
     public static void main(String[] args) {
+        LookAndFeelManager.setSystemLookAndFeel();
+        
         // Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
         System.setProperty("awt.useSystemAAFontSettings", "lcd");
         System.setProperty("swing.aatext", "true");
@@ -83,7 +85,7 @@ public class ClassFinder {
         directoryChooser = new DirectoryChooser("Select search directory");
         nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
         lookAndFeelManager = new LookAndFeelManager();
-        lookAndFeelManager.initChooserMenuItems(mnLookFeel, buttonGroup, mainFrame, directoryChooser);
+        lookAndFeelManager.initChooserMenuItems(lookAndFeelMenu, buttonGroup, mainFrame, directoryChooser);
         initResultTable();
     }
 
@@ -302,8 +304,8 @@ public class ClassFinder {
         viewMenu.setMnemonic('V');
         menuBar.add(viewMenu);
 
-        mnLookFeel = new JMenu("Look & Feel");
-        viewMenu.add(mnLookFeel);
+        lookAndFeelMenu = new JMenu("Look & Feel");
+        viewMenu.add(lookAndFeelMenu);
 
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic('H');
@@ -318,13 +320,14 @@ public class ClassFinder {
         classFinder.setStatusBar(getStatusBar());
         classFinder.setStartDirectory(new File(directoryBox.getSelectedItem().toString()));
         classFinder.setSearchPattern(Pattern.compile(getSearchBox().getSelectedItem().toString(), Pattern.CASE_INSENSITIVE));
+        classFinder.setStopButton(getStopButton());
         if (!classFinder.isAlive()) {
             classFinder.start();
         }
     }
 
     protected JMenu getLookAndFeelMenu() {
-        return mnLookFeel;
+        return lookAndFeelMenu;
     }
 
     protected JComboBox getDirectoryBox() {

@@ -11,7 +11,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 public class LookAndFeelManager {
     
-    static {
+    public static void setSystemLookAndFeel() {
         // Default to the operating system's native look and feel. Duh...
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
