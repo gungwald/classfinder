@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.5
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'ClassFinder',
+                   'Implementation-Version': version,
+		   'Main-Class': 'ClassFinder'
+    }
+}
+
+eclipse {
+    classpath {
+        defaultOutputDir = file("build/classes/main")
+    }
+}
+
+repositories {
+    mavenCentral()
+}
