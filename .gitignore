@@ -13,6 +13,7 @@ bin/
 hs_err_pid*
 /bin/
 /classes/
+
 # Gradle configuration
 .gradle/
 
@@ -33,3 +34,4 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+#

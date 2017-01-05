@@ -139,6 +139,7 @@ public class ClassFinder {
         GridBagConstraints gbc_directoryLabel = new GridBagConstraints();
         gbc_directoryLabel.gridx = 0;
         gbc_directoryLabel.gridy = 0;
+        gbc_directoryLabel.anchor = GridBagConstraints.EAST;
         parameterPanel.add(directoryLabel, gbc_directoryLabel);
 
         directoryBox = new JComboBox();
@@ -196,12 +197,12 @@ public class ClassFinder {
         gbc_searchBox.gridy = 1;
         parameterPanel.add(searchBox, gbc_searchBox);
 
-        JLabel searchLabel = new JLabel("Search for class:");
+        JLabel searchLabel = new JLabel("Search pattern:");
         searchLabel.setLabelFor(searchBox);
-        searchLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbc_searchLabel = new GridBagConstraints();
         gbc_searchLabel.gridx = 0;
         gbc_searchLabel.gridy = 1;
+        gbc_searchLabel.anchor = GridBagConstraints.EAST;
         parameterPanel.add(searchLabel, gbc_searchLabel);
 
         searchButton = new JButton("Search");
@@ -223,7 +224,7 @@ public class ClassFinder {
 
         resultTable = new JTable();
         resultTable.setCellSelectionEnabled(true);
-        resultTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Container Type", "File", "Class Version", "Java Version" }));
+        resultTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Type", "Location", "Major Version", "Java Version" }));
         // resultTable.setFillsViewportHeight(true);
         resultTableScrollPane.setViewportView(resultTable);
 

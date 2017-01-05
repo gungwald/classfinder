@@ -88,8 +88,8 @@ public class ClassFinderThread extends Thread {
     private void addResultRow(JarFile jar, JarEntry entry) throws IOException {
         final String[] row = new String[4];
         ClassVersion version = versionExtractor.getVersion(jar, entry);
-        row[0] = "Jar";
-        row[1] = jar.getName() + ":" + entry.getName();
+        row[0] = "Jar Entry";
+        row[1] = jar.getName() + " : " + entry.getName();
         row[2] = String.valueOf(version.getMajorVersion());
         row[3] = String.valueOf(version.getProductVersion());
         addResultRow(row);
@@ -98,7 +98,7 @@ public class ClassFinderThread extends Thread {
     private void addResultRow(File searchIn) throws IOException {
         ClassVersion version = versionExtractor.getVersion(searchIn);
         final String[] row = new String[4];
-        row[0] = "Directory";
+        row[0] = "File";
         row[1] = searchIn.getAbsolutePath();
         row[2] = String.valueOf(version.getMajorVersion());
         row[3] = String.valueOf(version.getProductVersion());
