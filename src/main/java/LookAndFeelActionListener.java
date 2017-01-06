@@ -1,4 +1,5 @@
 import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class LookAndFeelActionListener implements ActionListener {
             UIManager.setLookAndFeel(lookMap.get(event.getActionCommand()).getClassName());
             for (Component c : componentsToUpdate) {
                 SwingUtilities.updateComponentTreeUI(c);
+                if (c instanceof Window) {
+                    ((Window) c).pack();
+                }
             }
         }
         catch (Exception e) {

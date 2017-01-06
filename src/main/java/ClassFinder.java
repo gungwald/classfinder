@@ -55,7 +55,7 @@ public class ClassFinder {
      * Launch the application.
      */
     public static void main(String[] args) {
-        LookAndFeelManager.setSystemLookAndFeel();
+        //LookAndFeelManager.setSystemLookAndFeel();
         
         // Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
         System.setProperty("awt.useSystemAAFontSettings", "lcd");
@@ -63,6 +63,8 @@ public class ClassFinder {
         // Put the main menu at the top on a Mac because that where is should
         // be.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
+        // Needed for Java 6 on Mac.
+        System.setProperty("apple.awt.graphics.UseQuartz", "true");
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -123,7 +125,7 @@ public class ClassFinder {
         JPanel mainPanel = new JPanel();
         mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
         mainFrame.getContentPane().add(mainPanel);
-        mainPanel.setLayout(new BorderLayout(10, 20));
+        mainPanel.setLayout(new BorderLayout(0, 10));
 
         JPanel parameterPanel = new JPanel();
         mainPanel.add(parameterPanel, BorderLayout.NORTH);
@@ -147,6 +149,8 @@ public class ClassFinder {
         directoryLabel.setLabelFor(directoryBox);
         directoryBox.setEditable(true);
         GridBagConstraints gbc_directoryBox = new GridBagConstraints();
+        gbc_directoryBox.ipady = 4;
+        gbc_directoryBox.insets = new Insets(0, 4, 0, 4);
         gbc_directoryBox.fill = GridBagConstraints.HORIZONTAL;
         gbc_directoryBox.gridx = 1;
         gbc_directoryBox.gridy = 0;
@@ -192,6 +196,8 @@ public class ClassFinder {
         });
         searchBox.setEditable(true);
         GridBagConstraints gbc_searchBox = new GridBagConstraints();
+        gbc_searchBox.ipady = 4;
+        gbc_searchBox.insets = new Insets(4, 4, 0, 4);
         gbc_searchBox.fill = GridBagConstraints.HORIZONTAL;
         gbc_searchBox.gridx = 1;
         gbc_searchBox.gridy = 1;
@@ -200,6 +206,7 @@ public class ClassFinder {
         JLabel searchLabel = new JLabel("Search pattern:");
         searchLabel.setLabelFor(searchBox);
         GridBagConstraints gbc_searchLabel = new GridBagConstraints();
+        gbc_searchLabel.insets = new Insets(4, 0, 0, 0);
         gbc_searchLabel.gridx = 0;
         gbc_searchLabel.gridy = 1;
         gbc_searchLabel.anchor = GridBagConstraints.EAST;
@@ -213,6 +220,7 @@ public class ClassFinder {
             }
         });
         GridBagConstraints gbc_searchButton = new GridBagConstraints();
+        gbc_searchButton.insets = new Insets(4, 0, 0, 0);
         gbc_searchButton.anchor = GridBagConstraints.NORTH;
         gbc_searchButton.fill = GridBagConstraints.HORIZONTAL;
         gbc_searchButton.gridx = 2;
