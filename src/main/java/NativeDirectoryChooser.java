@@ -17,6 +17,7 @@ public class NativeDirectoryChooser extends FileDialog {
     
 	public NativeDirectoryChooser(Frame parent, String title) {
 		super(parent, title, FileDialog.LOAD);
+		setDirectory(System.getProperty("user.dir"));
 	}
 
 	public String chooseDirectory() {

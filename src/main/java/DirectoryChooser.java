@@ -1,6 +1,7 @@
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
@@ -14,6 +15,7 @@ public class DirectoryChooser extends JFileChooser {
 		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         setApproveButtonText("Choose");
         setDialogTitle(title);
+        setCurrentDirectory(new File(System.getProperty("user.dir")));
 	}
     
 	public int showOpenDialog(Component requester) {

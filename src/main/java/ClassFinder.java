@@ -1,5 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -29,8 +28,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -42,12 +39,12 @@ public class ClassFinder {
     private JMenu lookAndFeelMenu;
     private DirectoryChooser directoryChooser;
     private NativeDirectoryChooser nativeDirectoryChooser;
-    private JComboBox directoryBox;
+    private JComboBox<String> directoryBox;
     private JTable resultTable;
     private LookAndFeelManager lookAndFeelManager;
     private ClassFinderThread classFinder;
     private JLabel statusBar;
-    private JComboBox searchBox;
+    private JComboBox<String> searchBox;
     private JButton searchButton;
     private JButton stopButton;
 
@@ -55,13 +52,12 @@ public class ClassFinder {
      * Launch the application.
      */
     public static void main(String[] args) {
-        //LookAndFeelManager.setSystemLookAndFeel();
+        LookAndFeelManager.setSystemLookAndFeel();
         
         // Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
         System.setProperty("awt.useSystemAAFontSettings", "lcd");
         System.setProperty("swing.aatext", "true");
-        // Put the main menu at the top on a Mac because that where is should
-        // be.
+        // Put the main menu at the top on a Mac because that where is should be.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         // Needed for Java 6 on Mac.
         System.setProperty("apple.awt.graphics.UseQuartz", "true");
@@ -100,15 +96,18 @@ public class ClassFinder {
         centeredCellRenderer.setHorizontalAlignment(JLabel.CENTER);
         TableColumnModel resultColumnModel = resultTable.getColumnModel();
         resultColumnModel.getColumn(0).setMinWidth(10);
-        resultColumnModel.getColumn(0).setPreferredWidth(30);
+        resultColumnModel.getColumn(0).setMaxWidth(130);
+        resultColumnModel.getColumn(0).setPreferredWidth(100);
         resultColumnModel.getColumn(1).setMinWidth(10);
         resultColumnModel.getColumn(1).setPreferredWidth(400);
         resultColumnModel.getColumn(1).setMaxWidth(Integer.MAX_VALUE);
         resultColumnModel.getColumn(2).setMinWidth(10);
-        resultColumnModel.getColumn(2).setPreferredWidth(30);
+        resultColumnModel.getColumn(2).setMaxWidth(130);
+        resultColumnModel.getColumn(2).setPreferredWidth(100);
         resultColumnModel.getColumn(2).setCellRenderer(centeredCellRenderer);
         resultColumnModel.getColumn(3).setMinWidth(10);
-        resultColumnModel.getColumn(3).setPreferredWidth(30);
+        resultColumnModel.getColumn(3).setMaxWidth(130);
+        resultColumnModel.getColumn(3).setPreferredWidth(100);
         resultColumnModel.getColumn(3).setCellRenderer(centeredCellRenderer);
     }
 
@@ -144,8 +143,9 @@ public class ClassFinder {
         gbc_directoryLabel.anchor = GridBagConstraints.EAST;
         parameterPanel.add(directoryLabel, gbc_directoryLabel);
 
-        directoryBox = new JComboBox();
+        directoryBox = new JComboBox<String>();
         directoryBox.setToolTipText("Enter a directory where the search will start");
+        directoryBox.addItem(System.getProperty("user.dir"));
         directoryLabel.setLabelFor(directoryBox);
         directoryBox.setEditable(true);
         GridBagConstraints gbc_directoryBox = new GridBagConstraints();
@@ -179,7 +179,7 @@ public class ClassFinder {
         gbc_browseButton.gridy = 0;
         parameterPanel.add(browseButton, gbc_browseButton);
 
-        searchBox = new JComboBox();
+        searchBox = new JComboBox<String>();
         searchBox.setToolTipText("Enter a regular expression search pattern for the class you wan to find");
         searchBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -333,7 +333,7 @@ public class ClassFinder {
         return lookAndFeelMenu;
     }
 
-    protected JComboBox getDirectoryBox() {
+    protected JComboBox<String> getDirectoryBox() {
         return directoryBox;
     }
 
@@ -353,7 +353,7 @@ public class ClassFinder {
         return statusBar;
     }
 
-    protected JComboBox getSearchBox() {
+    protected JComboBox<String> getSearchBox() {
         return searchBox;
     }
 
