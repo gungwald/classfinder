@@ -9,7 +9,7 @@
 
 	<property name="main.class" value="ClassFinder" />
 	<property name="version" value="1.0" />
-	<property name="lang.version" value="1.5" />
+	<property name="lang.version" value="1.4" />
 	<property name="src.dir" value="src/main/java" />
 	<property name="cls.dir" value="build/classes" />
 
