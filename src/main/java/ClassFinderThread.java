@@ -78,13 +78,7 @@ public class ClassFinderThread extends Thread {
                     } else if (!entry.isDirectory() && name.endsWith(".jar")) {
                         File tmpJar = extractTmpJar(searchIn, whatToFind, jarFile, entry, name);
                         if (tmpJar != null) {
-                            JarFile subJarFile = new JarFile(tmpJar);
-                            for (JarEntry subEntry : Collections.list(subJarFile.entries())) {
-                                String nameInSubJar = subEntry.getName();
-                                if (!subEntry.isDirectory() && nameInSubJar.endsWith(".class") && whatToFind.matcher(nameInSubJar).find()) {
-                                    addResultRow(subJarFile, subEntry);
-                                }
-                            }
+                            find(tmpJar, whatToFind);
                         }
                     }
                 }
