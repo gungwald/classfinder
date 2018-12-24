@@ -34,17 +34,17 @@ import javax.swing.table.TableColumnModel;
 
 public class ClassFinder {
 
-    private JFrame mainFrame;
-    private final ButtonGroup buttonGroup = new ButtonGroup();
-    private JMenu lookAndFeelMenu;
-    private DirectoryChooser directoryChooser;
-    private NativeDirectoryChooser nativeDirectoryChooser;
-    private JComboBox<String> directoryBox;
+private JFrame mainFrame;
+private final ButtonGroup buttonGroup = new ButtonGroup();
+private JMenu lookAndFeelMenu;
+private DirectoryChooser directoryChooser;
+private NativeDirectoryChooser nativeDirectoryChooser;
+private JComboBox directoryBox;
     private JTable resultTable;
     private LookAndFeelManager lookAndFeelManager;
     private ClassFinderThread classFinder;
     private JLabel statusBar;
-    private JComboBox<String> searchBox;
+    private JComboBox searchBox;
     private JButton searchButton;
     private JButton stopButton;
 
@@ -143,7 +143,7 @@ public class ClassFinder {
         gbc_directoryLabel.anchor = GridBagConstraints.EAST;
         parameterPanel.add(directoryLabel, gbc_directoryLabel);
 
-        directoryBox = new JComboBox<String>();
+        directoryBox = new JComboBox();
         directoryBox.setToolTipText("Enter a directory where the search will start");
         directoryBox.addItem(System.getProperty("user.dir"));
         directoryLabel.setLabelFor(directoryBox);
@@ -179,7 +179,7 @@ public class ClassFinder {
         gbc_browseButton.gridy = 0;
         parameterPanel.add(browseButton, gbc_browseButton);
 
-        searchBox = new JComboBox<String>();
+        searchBox = new JComboBox();
         searchBox.setToolTipText("Enter a regular expression search pattern for the class you wan to find");
         searchBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -333,7 +333,7 @@ public class ClassFinder {
         return lookAndFeelMenu;
     }
 
-    protected JComboBox<String> getDirectoryBox() {
+    protected JComboBox getDirectoryBox() {
         return directoryBox;
     }
 
@@ -353,7 +353,7 @@ public class ClassFinder {
         return statusBar;
     }
 
-    protected JComboBox<String> getSearchBox() {
+    protected JComboBox getSearchBox() {
         return searchBox;
     }
 
