@@ -2,6 +2,10 @@ import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.Closeable;
 import java.util.Collections;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -71,6 +75,11 @@ public class ClassFinderThread extends Thread {
                     String name = entry.getName();
                     if (!entry.isDirectory() && name.endsWith(".class") && whatToFind.matcher(name).find()) {
                         addResultRow(jarFile, entry);
+                    } else if (!entry.isDirectory() && name.endsWith(".jar")) {
+                        File tmpJar = extractTmpJar(searchIn, whatToFind, jarFile, entry, name);
+                        if (tmpJar != null) {
+                            find(tmpJar, whatToFind);
+                        }
                     }
                 }
             }
@@ -82,6 +91,57 @@ public class ClassFinderThread extends Thread {
             System.err.println("Failed to search " + searchIn + " for " + whatToFind.toString());
             e.printStackTrace();
             // Continue if one file causes an exception.
+        }
+    }
+    private File extractTmpJar(File searchIn, Pattern whatToFind, JarFile jarFile, JarEntry entry, String name) throws IOException {
+        String jarFilePath = searchIn.getAbsolutePath();
+        jarFilePath = jarFilePath.replaceAll("\\\\", "/");
+        String path = jarFilePath.substring(0, jarFilePath.lastIndexOf('/'));
+        File dir = new File(path);
+        File tmpJar = null;
+        if (dir.exists()) {
+            File tmpDir = new File(path + "/temp001/");
+            if (!tmpDir.exists()) {
+                tmpDir.mkdirs();
+            }
+            tmpJar = new File(path + "/temp001/" + name);
+
+            String subTmpJar = tmpJar.getAbsolutePath();
+            String subJarFilePath = subTmpJar.replaceAll("\\\\", "/");
+            String subPath = subJarFilePath.substring(0, subJarFilePath.lastIndexOf('/'));
+            File subDir = new File(subPath);
+            if (!subDir.exists()) {
+                subDir.mkdirs();
+            }
+
+            tmpJar.createNewFile();
+            OutputStream outputStream = null;
+            InputStream input = null;
+            try {
+                outputStream = new FileOutputStream(tmpJar);
+                input = jarFile.getInputStream(entry);
+                byte[] buffer = new byte[10240];
+                int len = input.read(buffer);
+                while (len > 0) {
+                    outputStream.write(buffer, 0, len);
+                    len = input.read(buffer);
+                }
+                outputStream.flush();
+            } finally {
+                close(outputStream);
+                close(input);
+            }
+
+        }
+        return tmpJar;
+    }
+
+    private static void close(Closeable obj) {
+        if (obj != null) {
+            try {
+                obj.close();
+            } catch (Throwable e){
+            }
         }
     }
 
