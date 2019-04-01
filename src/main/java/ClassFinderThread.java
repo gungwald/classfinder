@@ -1,11 +1,11 @@
 import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.InputStream;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -145,11 +145,19 @@ public class ClassFinderThread extends Thread {
         }
     }
 
+    public String getRelativePath(String absolutePath) {
+    	return absolutePath.replace(startDirectory.getAbsolutePath(), "");
+    }
+    
+    public String getRelativePath(File f) {
+    	return f.getAbsolutePath().replace(startDirectory.getAbsolutePath(), "");
+    }
+    
     private void addResultRow(JarFile jar, JarEntry entry) throws IOException {
         final String[] row = new String[4];
         ClassVersion version = versionExtractor.getVersion(jar, entry);
         row[0] = "Jar Entry";
-        row[1] = jar.getName() + " : " + entry.getName();
+        row[1] = getRelativePath(jar.getName()) + " : " + entry.getName();
         row[2] = String.valueOf(version.getMajorVersion());
         row[3] = String.valueOf(version.getProductVersion());
         addResultRow(row);
@@ -159,7 +167,7 @@ public class ClassFinderThread extends Thread {
         ClassVersion version = versionExtractor.getVersion(searchIn);
         final String[] row = new String[4];
         row[0] = "File";
-        row[1] = searchIn.getAbsolutePath();
+        row[1] = getRelativePath(searchIn);
         row[2] = String.valueOf(version.getMajorVersion());
         row[3] = String.valueOf(version.getProductVersion());
         addResultRow(row);

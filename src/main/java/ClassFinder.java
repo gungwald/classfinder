@@ -34,348 +34,347 @@ import javax.swing.table.TableColumnModel;
 
 public class ClassFinder {
 
-private JFrame mainFrame;
-private final ButtonGroup buttonGroup = new ButtonGroup();
-private JMenu lookAndFeelMenu;
-private DirectoryChooser directoryChooser;
-private NativeDirectoryChooser nativeDirectoryChooser;
-private JComboBox directoryBox;
-    private JTable resultTable;
-    private LookAndFeelManager lookAndFeelManager;
-    private ClassFinderThread classFinder;
-    private JLabel statusBar;
-    private JComboBox searchBox;
-    private JButton searchButton;
-    private JButton stopButton;
+	private JFrame mainFrame;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JMenu lookAndFeelMenu;
+	private DirectoryChooser directoryChooser;
+	private NativeDirectoryChooser nativeDirectoryChooser;
+	private JComboBox directoryBox;
+	private JTable resultTable;
+	private LookAndFeelManager lookAndFeelManager;
+	private ClassFinderThread classFinder;
+	private JLabel statusBar;
+	private JComboBox searchBox;
+	private JButton searchButton;
+	private JButton stopButton;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        LookAndFeelManager.setSystemLookAndFeel();
-        
-        // Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
-        System.setProperty("awt.useSystemAAFontSettings", "lcd");
-        System.setProperty("swing.aatext", "true");
-        // Put the main menu at the top on a Mac because that where is should be.
-        System.setProperty("apple.laf.useScreenMenuBar", "true");
-        // Needed for Java 6 on Mac.
-        System.setProperty("apple.awt.graphics.UseQuartz", "true");
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		LookAndFeelManager.setSystemLookAndFeel();
 
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ClassFinder window = new ClassFinder();
-                    window.mainFrame.setVisible(true);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+		// Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
+		System.setProperty("awt.useSystemAAFontSettings", "lcd");
+		System.setProperty("swing.aatext", "true");
+		// Put the main menu at the top on a Mac because that where is should be.
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		// Needed for Java 6 on Mac.
+		System.setProperty("apple.awt.graphics.UseQuartz", "true");
 
-    /**
-     * Create the application.
-     */
-    public ClassFinder() {
-        initialize();
-        directoryChooser = new DirectoryChooser("Select search directory");
-        nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
-        lookAndFeelManager = new LookAndFeelManager();
-        lookAndFeelManager.initChooserMenuItems(lookAndFeelMenu, buttonGroup, mainFrame, directoryChooser);
-        initResultTable();
-    }
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ClassFinder window = new ClassFinder();
+					window.mainFrame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
-    /**
-     * Ideally the column widths should be stored and retrieved across
-     * invocations.
-     */
-    protected void initResultTable() {
-        DefaultTableCellRenderer centeredCellRenderer = new DefaultTableCellRenderer();
-        centeredCellRenderer.setHorizontalAlignment(JLabel.CENTER);
-        TableColumnModel resultColumnModel = resultTable.getColumnModel();
-        resultColumnModel.getColumn(0).setMinWidth(10);
-        resultColumnModel.getColumn(0).setMaxWidth(130);
-        resultColumnModel.getColumn(0).setPreferredWidth(100);
-        resultColumnModel.getColumn(1).setMinWidth(10);
-        resultColumnModel.getColumn(1).setPreferredWidth(400);
-        resultColumnModel.getColumn(1).setMaxWidth(Integer.MAX_VALUE);
-        resultColumnModel.getColumn(2).setMinWidth(10);
-        resultColumnModel.getColumn(2).setMaxWidth(130);
-        resultColumnModel.getColumn(2).setPreferredWidth(100);
-        resultColumnModel.getColumn(2).setCellRenderer(centeredCellRenderer);
-        resultColumnModel.getColumn(3).setMinWidth(10);
-        resultColumnModel.getColumn(3).setMaxWidth(130);
-        resultColumnModel.getColumn(3).setPreferredWidth(100);
-        resultColumnModel.getColumn(3).setCellRenderer(centeredCellRenderer);
-    }
+	/**
+	 * Create the application.
+	 */
+	public ClassFinder() {
+		initialize();
+		directoryChooser = new DirectoryChooser("Select search directory");
+		nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
+		lookAndFeelManager = new LookAndFeelManager();
+		lookAndFeelManager.initChooserMenuItems(lookAndFeelMenu, buttonGroup, mainFrame, directoryChooser);
+		initResultTable();
+	}
 
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
-        mainFrame = new JFrame();
-        mainFrame.setTitle("ClassFinder");
-        mainFrame.setBounds(100, 100, 780, 427);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.getContentPane().setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.X_AXIS));
+	/**
+	 * Ideally the column widths should be stored and retrieved across invocations.
+	 */
+	protected void initResultTable() {
+		DefaultTableCellRenderer centeredCellRenderer = new DefaultTableCellRenderer();
+		centeredCellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		TableColumnModel resultColumnModel = resultTable.getColumnModel();
+		resultColumnModel.getColumn(0).setMinWidth(10);
+		resultColumnModel.getColumn(0).setMaxWidth(130);
+		resultColumnModel.getColumn(0).setPreferredWidth(100);
+		resultColumnModel.getColumn(1).setMinWidth(10);
+		resultColumnModel.getColumn(1).setPreferredWidth(400);
+		resultColumnModel.getColumn(1).setMaxWidth(Integer.MAX_VALUE);
+		resultColumnModel.getColumn(2).setMinWidth(10);
+		resultColumnModel.getColumn(2).setMaxWidth(130);
+		resultColumnModel.getColumn(2).setPreferredWidth(100);
+		resultColumnModel.getColumn(2).setCellRenderer(centeredCellRenderer);
+		resultColumnModel.getColumn(3).setMinWidth(10);
+		resultColumnModel.getColumn(3).setMaxWidth(130);
+		resultColumnModel.getColumn(3).setPreferredWidth(100);
+		resultColumnModel.getColumn(3).setCellRenderer(centeredCellRenderer);
+	}
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
-        mainFrame.getContentPane().add(mainPanel);
-        mainPanel.setLayout(new BorderLayout(0, 10));
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		mainFrame = new JFrame();
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(ClassFinder.class.getResource("/iconfinder_magnifier-data_532758-20x20.png")));
+		mainFrame.setTitle("ClassFinder");
+		mainFrame.setBounds(100, 100, 780, 427);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.getContentPane().setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.X_AXIS));
 
-        JPanel parameterPanel = new JPanel();
-        mainPanel.add(parameterPanel, BorderLayout.NORTH);
-        GridBagLayout gbl_parameterPanel = new GridBagLayout();
-        gbl_parameterPanel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-        gbl_parameterPanel.rowHeights = new int[] { 0, 0, 0 };
-        gbl_parameterPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
-        gbl_parameterPanel.rowWeights = new double[] { 0.0, 0.0, 0.0 };
-        parameterPanel.setLayout(gbl_parameterPanel);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+		mainFrame.getContentPane().add(mainPanel);
+		mainPanel.setLayout(new BorderLayout(0, 10));
 
-        JLabel directoryLabel = new JLabel("Search directory:");
-        directoryLabel.setToolTipText("The directory where the search will start");
-        GridBagConstraints gbc_directoryLabel = new GridBagConstraints();
-        gbc_directoryLabel.gridx = 0;
-        gbc_directoryLabel.gridy = 0;
-        gbc_directoryLabel.anchor = GridBagConstraints.EAST;
-        parameterPanel.add(directoryLabel, gbc_directoryLabel);
+		JPanel parameterPanel = new JPanel();
+		mainPanel.add(parameterPanel, BorderLayout.NORTH);
+		GridBagLayout gbl_parameterPanel = new GridBagLayout();
+		gbl_parameterPanel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+		gbl_parameterPanel.rowHeights = new int[] { 0, 0, 0 };
+		gbl_parameterPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_parameterPanel.rowWeights = new double[] { 0.0, 0.0, 0.0 };
+		parameterPanel.setLayout(gbl_parameterPanel);
 
-        directoryBox = new JComboBox();
-        directoryBox.setToolTipText("Enter a directory where the search will start");
-        directoryBox.addItem(System.getProperty("user.dir"));
-        directoryLabel.setLabelFor(directoryBox);
-        directoryBox.setEditable(true);
-        GridBagConstraints gbc_directoryBox = new GridBagConstraints();
-        gbc_directoryBox.ipady = 4;
-        gbc_directoryBox.insets = new Insets(0, 4, 0, 4);
-        gbc_directoryBox.fill = GridBagConstraints.HORIZONTAL;
-        gbc_directoryBox.gridx = 1;
-        gbc_directoryBox.gridy = 0;
-        parameterPanel.add(directoryBox, gbc_directoryBox);
+		JLabel directoryLabel = new JLabel("Search directory:");
+		directoryLabel.setToolTipText("The directory where the search will start");
+		GridBagConstraints gbc_directoryLabel = new GridBagConstraints();
+		gbc_directoryLabel.gridx = 0;
+		gbc_directoryLabel.gridy = 0;
+		gbc_directoryLabel.anchor = GridBagConstraints.EAST;
+		parameterPanel.add(directoryLabel, gbc_directoryLabel);
 
-        JButton browseButton = new JButton("Browse");
-        browseButton.setToolTipText("Open a dialog to select a search directory");
-        browseButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                String dir = null;
-                if ((event.getModifiers() & (ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK | ActionEvent.META_MASK | ActionEvent.SHIFT_MASK)) > 0) {
-                    dir = nativeDirectoryChooser.chooseDirectory();
-                }
-                else {
-                    dir = directoryChooser.chooseDirectory(mainFrame);
-                }
-                if (dir != null) {
-                    getDirectoryBox().addItem(dir);
-                    getDirectoryBox().setSelectedItem(dir);
-                }
-            }
-        });
-        GridBagConstraints gbc_browseButton = new GridBagConstraints();
-        gbc_browseButton.fill = GridBagConstraints.HORIZONTAL;
-        gbc_browseButton.gridx = 2;
-        gbc_browseButton.gridy = 0;
-        parameterPanel.add(browseButton, gbc_browseButton);
+		directoryBox = new JComboBox();
+		directoryBox.setToolTipText("Enter a directory where the search will start");
+		directoryBox.addItem(System.getProperty("user.dir"));
+		directoryLabel.setLabelFor(directoryBox);
+		directoryBox.setEditable(true);
+		GridBagConstraints gbc_directoryBox = new GridBagConstraints();
+		gbc_directoryBox.insets = new Insets(0, 4, 0, 4);
+		gbc_directoryBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_directoryBox.gridx = 1;
+		gbc_directoryBox.gridy = 0;
+		parameterPanel.add(directoryBox, gbc_directoryBox);
 
-        searchBox = new JComboBox();
-        searchBox.setToolTipText("Enter a regular expression search pattern for the class you wan to find");
-        searchBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                startSearch();
-            }
-        });
-        searchBox.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-                    startSearch();
-                }
-            }
-        });
-        searchBox.setEditable(true);
-        GridBagConstraints gbc_searchBox = new GridBagConstraints();
-        gbc_searchBox.ipady = 4;
-        gbc_searchBox.insets = new Insets(4, 4, 0, 4);
-        gbc_searchBox.fill = GridBagConstraints.HORIZONTAL;
-        gbc_searchBox.gridx = 1;
-        gbc_searchBox.gridy = 1;
-        parameterPanel.add(searchBox, gbc_searchBox);
+		JButton browseButton = new JButton("Browse");
+		browseButton.setToolTipText("Open a dialog to select a search directory");
+		browseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				String dir = null;
+				if ((event.getModifiers() & (ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK | ActionEvent.META_MASK
+						| ActionEvent.SHIFT_MASK)) > 0) {
+					dir = nativeDirectoryChooser.chooseDirectory();
+				} else {
+					dir = directoryChooser.chooseDirectory(mainFrame);
+				}
+				if (dir != null) {
+					getDirectoryBox().addItem(dir);
+					getDirectoryBox().setSelectedItem(dir);
+				}
+			}
+		});
+		GridBagConstraints gbc_browseButton = new GridBagConstraints();
+		gbc_browseButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_browseButton.gridx = 2;
+		gbc_browseButton.gridy = 0;
+		parameterPanel.add(browseButton, gbc_browseButton);
 
-        JLabel searchLabel = new JLabel("Search pattern:");
-        searchLabel.setLabelFor(searchBox);
-        GridBagConstraints gbc_searchLabel = new GridBagConstraints();
-        gbc_searchLabel.insets = new Insets(4, 0, 0, 0);
-        gbc_searchLabel.gridx = 0;
-        gbc_searchLabel.gridy = 1;
-        gbc_searchLabel.anchor = GridBagConstraints.EAST;
-        parameterPanel.add(searchLabel, gbc_searchLabel);
+		searchBox = new JComboBox();
+		searchBox.setToolTipText("Enter a regular expression search pattern for the class you wan to find");
+		searchBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				startSearch();
+			}
+		});
+		searchBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+					startSearch();
+				}
+			}
+		});
+		searchBox.setEditable(true);
+		GridBagConstraints gbc_searchBox = new GridBagConstraints();
+		gbc_searchBox.insets = new Insets(4, 4, 0, 4);
+		gbc_searchBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_searchBox.gridx = 1;
+		gbc_searchBox.gridy = 1;
+		parameterPanel.add(searchBox, gbc_searchBox);
 
-        searchButton = new JButton("Search");
-        searchButton.setToolTipText("Start search");
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                startSearch();
-            }
-        });
-        GridBagConstraints gbc_searchButton = new GridBagConstraints();
-        gbc_searchButton.insets = new Insets(4, 0, 0, 0);
-        gbc_searchButton.anchor = GridBagConstraints.NORTH;
-        gbc_searchButton.fill = GridBagConstraints.HORIZONTAL;
-        gbc_searchButton.gridx = 2;
-        gbc_searchButton.gridy = 1;
-        parameterPanel.add(searchButton, gbc_searchButton);
+		JLabel searchLabel = new JLabel("Search pattern:");
+		searchLabel.setLabelFor(searchBox);
+		GridBagConstraints gbc_searchLabel = new GridBagConstraints();
+		gbc_searchLabel.insets = new Insets(4, 0, 0, 0);
+		gbc_searchLabel.gridx = 0;
+		gbc_searchLabel.gridy = 1;
+		gbc_searchLabel.anchor = GridBagConstraints.EAST;
+		parameterPanel.add(searchLabel, gbc_searchLabel);
 
-        JScrollPane resultTableScrollPane = new JScrollPane();
-        mainPanel.add(resultTableScrollPane, BorderLayout.CENTER);
+		searchButton = new JButton("Search");
+		searchButton.setToolTipText("Start search");
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				startSearch();
+			}
+		});
+		GridBagConstraints gbc_searchButton = new GridBagConstraints();
+		gbc_searchButton.insets = new Insets(4, 0, 0, 0);
+		gbc_searchButton.anchor = GridBagConstraints.NORTH;
+		gbc_searchButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_searchButton.gridx = 2;
+		gbc_searchButton.gridy = 1;
+		parameterPanel.add(searchButton, gbc_searchButton);
 
-        resultTable = new JTable();
-        resultTable.setCellSelectionEnabled(true);
-        resultTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Type", "Location", "Major Version", "Java Version" }));
-        // resultTable.setFillsViewportHeight(true);
-        resultTableScrollPane.setViewportView(resultTable);
+		JScrollPane resultTableScrollPane = new JScrollPane();
+		mainPanel.add(resultTableScrollPane, BorderLayout.CENTER);
 
-        JPanel statusPanel = new JPanel();
-        mainPanel.add(statusPanel, BorderLayout.SOUTH);
-        GridBagLayout gbl_statusPanel = new GridBagLayout();
-        gbl_statusPanel.columnWidths = new int[] { 37, 0, 0 };
-        gbl_statusPanel.rowHeights = new int[] { 16, 0 };
-        gbl_statusPanel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-        gbl_statusPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-        statusPanel.setLayout(gbl_statusPanel);
+		resultTable = new JTable();
+		resultTable.setCellSelectionEnabled(true);
+		resultTable.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "Type", "Location", "Major Version", "Java Version" }));
+		// resultTable.setFillsViewportHeight(true);
+		resultTableScrollPane.setViewportView(resultTable);
 
-        statusBar = new JLabel("Ready");
-        GridBagConstraints gbc_statusBar = new GridBagConstraints();
-        gbc_statusBar.weightx = 1.0;
-        gbc_statusBar.fill = GridBagConstraints.HORIZONTAL;
-        gbc_statusBar.insets = new Insets(0, 0, 0, 5);
-        gbc_statusBar.anchor = GridBagConstraints.WEST;
-        gbc_statusBar.gridx = 0;
-        gbc_statusBar.gridy = 0;
-        statusPanel.add(statusBar, gbc_statusBar);
+		JPanel statusPanel = new JPanel();
+		mainPanel.add(statusPanel, BorderLayout.SOUTH);
+		GridBagLayout gbl_statusPanel = new GridBagLayout();
+		gbl_statusPanel.columnWidths = new int[] { 37, 0, 0 };
+		gbl_statusPanel.rowHeights = new int[] { 16, 0 };
+		gbl_statusPanel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gbl_statusPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		statusPanel.setLayout(gbl_statusPanel);
 
-        stopButton = new JButton("Stop");
-        stopButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                classFinder.setStopRequested(true);
-                stopButton.setVisible(false);
-            }
-        });
-        stopButton.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
+		statusBar = new JLabel("Ready");
+		GridBagConstraints gbc_statusBar = new GridBagConstraints();
+		gbc_statusBar.weightx = 1.0;
+		gbc_statusBar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_statusBar.insets = new Insets(0, 0, 0, 5);
+		gbc_statusBar.anchor = GridBagConstraints.WEST;
+		gbc_statusBar.gridx = 0;
+		gbc_statusBar.gridy = 0;
+		statusPanel.add(statusBar, gbc_statusBar);
 
-            }
-        });
-        stopButton.setVisible(false);
-        GridBagConstraints gbc_stopButton = new GridBagConstraints();
-        gbc_stopButton.gridx = 1;
-        gbc_stopButton.gridy = 0;
-        statusPanel.add(stopButton, gbc_stopButton);
+		stopButton = new JButton("Stop");
+		stopButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				classFinder.setStopRequested(true);
+				stopButton.setVisible(false);
+			}
+		});
+		stopButton.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
 
-        JMenuBar menuBar = new JMenuBar();
-        mainFrame.setJMenuBar(menuBar);
+			}
+		});
+		stopButton.setVisible(false);
+		GridBagConstraints gbc_stopButton = new GridBagConstraints();
+		gbc_stopButton.gridx = 1;
+		gbc_stopButton.gridy = 0;
+		statusPanel.add(stopButton, gbc_stopButton);
 
-        JMenu fileMenu = new JMenu("File");
-        fileMenu.setMnemonic('F');
-        menuBar.add(fileMenu);
+		JMenuBar menuBar = new JMenuBar();
+		mainFrame.setJMenuBar(menuBar);
 
-        JMenuItem mntmExit = new JMenuItem("Exit");
-        mntmExit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.dispose();
-                System.exit(0);
-            }
-        });
-        fileMenu.add(mntmExit);
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic('F');
+		menuBar.add(fileMenu);
 
-        JMenu editMenu = new JMenu("Edit");
-        editMenu.setMnemonic('E');
-        menuBar.add(editMenu);
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.dispose();
+				System.exit(0);
+			}
+		});
+		fileMenu.add(mntmExit);
 
-        JMenuItem mntmCut = new JMenuItem("Cut");
-        editMenu.add(mntmCut);
+		JMenu editMenu = new JMenu("Edit");
+		editMenu.setMnemonic('E');
+		menuBar.add(editMenu);
 
-        JMenuItem mntmCopy = new JMenuItem("Copy");
-        editMenu.add(mntmCopy);
+		JMenuItem mntmCut = new JMenuItem("Cut");
+		editMenu.add(mntmCut);
 
-        JMenuItem mntmPaste = new JMenuItem("Paste");
-        editMenu.add(mntmPaste);
+		JMenuItem mntmCopy = new JMenuItem("Copy");
+		editMenu.add(mntmCopy);
 
-        JMenu viewMenu = new JMenu("View");
-        viewMenu.setMnemonic('V');
-        menuBar.add(viewMenu);
+		JMenuItem mntmPaste = new JMenuItem("Paste");
+		editMenu.add(mntmPaste);
 
-        lookAndFeelMenu = new JMenu("Look & Feel");
-        viewMenu.add(lookAndFeelMenu);
+		JMenu viewMenu = new JMenu("View");
+		viewMenu.setMnemonic('V');
+		menuBar.add(viewMenu);
 
-        JMenu helpMenu = new JMenu("Help");
-        helpMenu.setMnemonic('H');
-        helpMenu.setHorizontalTextPosition(SwingConstants.CENTER);
-        menuBar.add(helpMenu);
-    }
+		lookAndFeelMenu = new JMenu("Look & Feel");
+		viewMenu.add(lookAndFeelMenu);
 
-    protected void startSearch() {
-        stopButton.setVisible(true);
-        classFinder = new ClassFinderThread();
-        classFinder.setResults(getResultTable());
-        classFinder.setStatusBar(getStatusBar());
-        classFinder.setStartDirectory(new File(directoryBox.getSelectedItem().toString()));
-        classFinder.setSearchPattern(Pattern.compile(getSearchBox().getSelectedItem().toString(), Pattern.CASE_INSENSITIVE));
-        classFinder.setStopButton(getStopButton());
-        if (!classFinder.isAlive()) {
-            classFinder.start();
-        }
-    }
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic('H');
+		helpMenu.setHorizontalTextPosition(SwingConstants.CENTER);
+		menuBar.add(helpMenu);
+	}
 
-    protected JMenu getLookAndFeelMenu() {
-        return lookAndFeelMenu;
-    }
+	protected void startSearch() {
+		stopButton.setVisible(true);
+		classFinder = new ClassFinderThread();
+		classFinder.setResults(getResultTable());
+		classFinder.setStatusBar(getStatusBar());
+		classFinder.setStartDirectory(new File(directoryBox.getSelectedItem().toString()));
+		classFinder.setSearchPattern(
+				Pattern.compile(getSearchBox().getSelectedItem().toString(), Pattern.CASE_INSENSITIVE));
+		classFinder.setStopButton(getStopButton());
+		if (!classFinder.isAlive()) {
+			classFinder.start();
+		}
+	}
 
-    protected JComboBox getDirectoryBox() {
-        return directoryBox;
-    }
+	protected JMenu getLookAndFeelMenu() {
+		return lookAndFeelMenu;
+	}
 
-    public Point calcCenteredPosition(Component component) {
-        Point point = new Point();
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        point.x = dim.width / 2 - component.getWidth() / 2;
-        point.y = dim.height / 2 - component.getHeight() / 2;
-        return point;
-    }
+	protected JComboBox getDirectoryBox() {
+		return directoryBox;
+	}
 
-    protected JTable getResultTable() {
-        return resultTable;
-    }
+	public Point calcCenteredPosition(Component component) {
+		Point point = new Point();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		point.x = dim.width / 2 - component.getWidth() / 2;
+		point.y = dim.height / 2 - component.getHeight() / 2;
+		return point;
+	}
 
-    protected JLabel getStatusBar() {
-        return statusBar;
-    }
+	protected JTable getResultTable() {
+		return resultTable;
+	}
 
-    protected JComboBox getSearchBox() {
-        return searchBox;
-    }
+	protected JLabel getStatusBar() {
+		return statusBar;
+	}
 
-    protected JButton getSearchButton() {
-        return searchButton;
-    }
+	protected JComboBox getSearchBox() {
+		return searchBox;
+	}
 
-    /**
-     * @return the classFinder
-     */
-    public ClassFinderThread getClassFinder() {
-        return classFinder;
-    }
+	protected JButton getSearchButton() {
+		return searchButton;
+	}
 
-    /**
-     * @param classFinder the classFinder to set
-     */
-    public void setClassFinder(ClassFinderThread classFinder) {
-        this.classFinder = classFinder;
-    }
+	/**
+	 * @return the classFinder
+	 */
+	public ClassFinderThread getClassFinder() {
+		return classFinder;
+	}
 
-    public JButton getStopButton() {
-        return stopButton;
-    }
+	/**
+	 * @param classFinder the classFinder to set
+	 */
+	public void setClassFinder(ClassFinderThread classFinder) {
+		this.classFinder = classFinder;
+	}
+
+	public JButton getStopButton() {
+		return stopButton;
+	}
 }
