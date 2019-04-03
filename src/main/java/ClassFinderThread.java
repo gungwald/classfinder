@@ -36,6 +36,7 @@ public class ClassFinderThread extends Thread {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
             	results.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            	((DefaultTableModel)results.getModel()).setRowCount(0);
             }
         });
     }
@@ -146,11 +147,11 @@ public class ClassFinderThread extends Thread {
     }
 
     public String getRelativePath(String absolutePath) {
-    	return absolutePath.replace(startDirectory.getAbsolutePath(), "");
+    	return absolutePath.replace(startDirectory.getAbsolutePath(), ".");
     }
     
     public String getRelativePath(File f) {
-    	return f.getAbsolutePath().replace(startDirectory.getAbsolutePath(), "");
+    	return f.getAbsolutePath().replace(startDirectory.getAbsolutePath(), ".");
     }
     
     private void addResultRow(JarFile jar, JarEntry entry) throws IOException {
@@ -186,7 +187,7 @@ public class ClassFinderThread extends Thread {
             public void run() {
                 int characterWidth = (int) (statusBar.getSize().getWidth() / 5);
                 String truncatedMessage = truncate(message, characterWidth);
-                // Adding html tags for wrapping screws up the UI updating.
+                // Adding HTML tags for wrapping screws up the UI updating.
                 statusBar.setText(truncatedMessage);
             }
         });

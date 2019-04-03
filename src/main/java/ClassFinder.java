@@ -115,6 +115,7 @@ public class ClassFinder {
 	private void initialize() {
 		mainFrame = new JFrame();
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(ClassFinder.class.getResource("/iconfinder_magnifier-data_532758-20x20.png")));
+		//mainFrame.setIconImage(new ImageIcon(ClassFinder.class.getResource("/iconfinder_magnifier-data_532758-20x20.jpeg")).getImage());
 		mainFrame.setTitle("ClassFinder");
 		mainFrame.setBounds(100, 100, 780, 427);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -315,6 +316,7 @@ public class ClassFinder {
 	}
 
 	protected void startSearch() {
+		getSearchBox().insertItemAt(getSearchBox().getSelectedItem(), 0);
 		stopButton.setVisible(true);
 		classFinder = new ClassFinderThread();
 		classFinder.setResults(getResultTable());
