@@ -1,3 +1,6 @@
+.DS_Store
+*.swp
+
 bin/
 *.class
 

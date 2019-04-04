@@ -323,20 +323,22 @@ public class ClassFinder {
 	}
 	
 	protected void setIconImageForMac() {
-		Image image = mainFrame.getIconImage();
-		try {
-		    // import com.apple.eawt.Application
-		    String className = "com.apple.eawt.Application";
-		    Class<?> cls = Class.forName(className);
-
-		    // Application application = Application.getApplication();
-		    Object application = cls.newInstance().getClass().getMethod("getApplication").invoke(null);
-
-		    // application.setDockIconImage(image);
-		    application.getClass().getMethod("setDockIconImage", java.awt.Image.class).invoke(application, image);
-		}
-		catch (Exception e) {
-		    e.printStackTrace();
+		if (System.getProperty("os.version").startsWith("10.5")) {
+			Image image = mainFrame.getIconImage();
+			try {
+			    // import com.apple.eawt.Application
+			    String className = "com.apple.eawt.Application";
+			    Class<?> cls = Class.forName(className);
+	
+			    // Application application = Application.getApplication();
+			    Object application = cls.newInstance().getClass().getMethod("getApplication").invoke(null);
+	
+			    // application.setDockIconImage(image);
+			    application.getClass().getMethod("setDockIconImage", java.awt.Image.class).invoke(application, image);
+			}
+			catch (Exception e) {
+			    e.printStackTrace();
+			}
 		}
 	}
 	
