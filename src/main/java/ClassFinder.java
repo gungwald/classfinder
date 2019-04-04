@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -79,6 +80,7 @@ public class ClassFinder {
 	 */
 	public ClassFinder() {
 		initialize();
+		initializeMacSpecific();
 		directoryChooser = new DirectoryChooser("Select search directory");
 		nativeDirectoryChooser = new NativeDirectoryChooser(mainFrame, "Select search directory");
 		lookAndFeelManager = new LookAndFeelManager();
@@ -315,6 +317,29 @@ public class ClassFinder {
 		menuBar.add(helpMenu);
 	}
 
+	protected void initializeMacSpecific() {
+		if (System.getProperty("os.name").contains("Mac"))
+			setIconImageForMac();
+	}
+	
+	protected void setIconImageForMac() {
+		Image image = mainFrame.getIconImage();
+		try {
+		    // import com.apple.eawt.Application
+		    String className = "com.apple.eawt.Application";
+		    Class<?> cls = Class.forName(className);
+
+		    // Application application = Application.getApplication();
+		    Object application = cls.newInstance().getClass().getMethod("getApplication").invoke(null);
+
+		    // application.setDockIconImage(image);
+		    application.getClass().getMethod("setDockIconImage", java.awt.Image.class).invoke(application, image);
+		}
+		catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	
 	protected void startSearch() {
 		getSearchBox().insertItemAt(getSearchBox().getSelectedItem(), 0);
 		stopButton.setVisible(true);
