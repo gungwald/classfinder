@@ -152,9 +152,10 @@ public class ClassFinder {
 		directoryBox.setEditable(true);
 		GridBagConstraints gbc_directoryBox = new GridBagConstraints();
 		gbc_directoryBox.insets = new Insets(0, 4, 0, 4);
-		gbc_directoryBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_directoryBox.fill = GridBagConstraints.BOTH;
 		gbc_directoryBox.gridx = 1;
 		gbc_directoryBox.gridy = 0;
+		gbc_directoryBox.anchor = GridBagConstraints.CENTER;
 		parameterPanel.add(directoryBox, gbc_directoryBox);
 
 		JButton browseButton = new JButton("Browse");
@@ -198,9 +199,10 @@ public class ClassFinder {
 		searchBox.setEditable(true);
 		GridBagConstraints gbc_searchBox = new GridBagConstraints();
 		gbc_searchBox.insets = new Insets(4, 4, 0, 4);
-		gbc_searchBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_searchBox.fill = GridBagConstraints.BOTH;
 		gbc_searchBox.gridx = 1;
 		gbc_searchBox.gridy = 1;
+		gbc_searchBox.anchor = GridBagConstraints.CENTER;
 		parameterPanel.add(searchBox, gbc_searchBox);
 
 		JLabel searchLabel = new JLabel("Search pattern:");
@@ -221,7 +223,6 @@ public class ClassFinder {
 		});
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
 		gbc_searchButton.insets = new Insets(4, 0, 0, 0);
-		gbc_searchButton.anchor = GridBagConstraints.NORTH;
 		gbc_searchButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_searchButton.gridx = 2;
 		gbc_searchButton.gridy = 1;
@@ -322,6 +323,9 @@ public class ClassFinder {
 			setIconImageForMac();
 	}
 	
+	/**
+	 * Requires Mac OS 10.5 and Java 1.5.
+	 */
 	protected void setIconImageForMac() {
 		if (System.getProperty("os.version").startsWith("10.5")) {
 			Image image = mainFrame.getIconImage();
