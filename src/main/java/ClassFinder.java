@@ -184,18 +184,28 @@ public class ClassFinder {
 		searchBox = new JComboBox();
 		searchBox.setToolTipText("Enter a regular expression search pattern for the class you wan to find");
 		searchBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				startSearch();
-			}
-		});
-		searchBox.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent event) {
-				if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("actionPerformed: event=" + e);
+				String cmd = e.getActionCommand();
+				// When Enter is pressed, 2 action events are generated:
+				// 1. comboBoxChanged
+				// 2. comboBoxEdited
+				// We only want to trigger the search once, so we must ignore
+				// one of these events.
+				if (cmd != null && cmd.equals("comboBoxChanged")) {
 					startSearch();
 				}
 			}
 		});
+//	Not needed because actionPerformed does it.
+//		searchBox.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyTyped(KeyEvent event) {
+//				if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+//					startSearch();
+//				}
+//			}
+//		});
 		searchBox.setEditable(true);
 		GridBagConstraints gbc_searchBox = new GridBagConstraints();
 		gbc_searchBox.insets = new Insets(4, 4, 0, 4);
