@@ -52,7 +52,7 @@ public class ClassFinder {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		LookAndFeelManager.setSystemLookAndFeel();
 
 		// Enable anti-aliased text: http://wiki.netbeans.org/FaqFontRendering
@@ -68,6 +68,7 @@ public class ClassFinder {
 				try {
 					ClassFinder window = new ClassFinder();
 					window.mainFrame.setVisible(true);
+                    window.startSearch(args);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -88,6 +89,14 @@ public class ClassFinder {
 		initResultTable();
 	}
 
+    public void startSearch(String[] args) {
+        if (args != null && args.length > 0) {
+            directoryBox.setSelectedItem(new File(args[0]).getAbsolutePath());
+            searchBox.setSelectedItem(".*");
+            startSearch();
+        }
+    }
+    
 	/**
 	 * Ideally the column widths should be stored and retrieved across invocations.
 	 */
