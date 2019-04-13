@@ -33,6 +33,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import classfinder.GlobPattern;
+
 public class ClassFinder {
 
 	private JFrame mainFrame;
@@ -146,7 +148,7 @@ public class ClassFinder {
 		gbl_parameterPanel.rowWeights = new double[] { 0.0, 0.0, 0.0 };
 		parameterPanel.setLayout(gbl_parameterPanel);
 
-		JLabel directoryLabel = new JLabel("Search directory:");
+		JLabel directoryLabel = new JLabel("Search start directory:");
 		directoryLabel.setToolTipText("The directory where the search will start");
 		GridBagConstraints gbc_directoryLabel = new GridBagConstraints();
 		gbc_directoryLabel.gridx = 0;
@@ -155,7 +157,7 @@ public class ClassFinder {
 		parameterPanel.add(directoryLabel, gbc_directoryLabel);
 
 		directoryBox = new JComboBox();
-		directoryBox.setToolTipText("Enter a directory where the search will start");
+		directoryBox.setToolTipText("Enter a directory where the search will start. All subdirectories and contained jar files will be searched for the given pattern.");
 		directoryBox.addItem(System.getProperty("user.dir"));
 		directoryLabel.setLabelFor(directoryBox);
 		directoryBox.setEditable(true);
@@ -191,7 +193,7 @@ public class ClassFinder {
 		parameterPanel.add(browseButton, gbc_browseButton);
 
 		searchBox = new JComboBox();
-		searchBox.setToolTipText("Enter a regular expression search pattern for the class you wan to find");
+		searchBox.setToolTipText("Enter a search pattern in the form of a file glob or a /regex/ that will match the name of the class you want to find. To use a regex, wrap the pattern in slashes.");
 		searchBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("actionPerformed: event=" + e);
@@ -224,7 +226,8 @@ public class ClassFinder {
 		gbc_searchBox.anchor = GridBagConstraints.CENTER;
 		parameterPanel.add(searchBox, gbc_searchBox);
 
-		JLabel searchLabel = new JLabel("Search pattern:");
+		JLabel searchLabel = new JLabel("Class name search pattern:");
+		searchLabel.setToolTipText("A search pattern in the form of a file glob or a /regex/ that will match the name of the class you want to find.");
 		searchLabel.setLabelFor(searchBox);
 		GridBagConstraints gbc_searchLabel = new GridBagConstraints();
 		gbc_searchLabel.insets = new Insets(4, 0, 0, 0);
@@ -372,8 +375,14 @@ public class ClassFinder {
 		classFinder.setResults(getResultTable());
 		classFinder.setStatusBar(getStatusBar());
 		classFinder.setStartDirectory(new File(directoryBox.getSelectedItem().toString()));
-		classFinder.setSearchPattern(
-				Pattern.compile(getSearchBox().getSelectedItem().toString(), Pattern.CASE_INSENSITIVE));
+		Pattern pattern = null;
+		String searchText = getSearchBox().getSelectedItem().toString().trim();
+		if (searchText.startsWith("/") && searchText.endsWith("/")) {
+			Pattern.compile(searchText, Pattern.CASE_INSENSITIVE);
+		} else {
+			GlobPattern.compile(searchText, Pattern.CASE_INSENSITIVE);
+		}
+		classFinder.setSearchPattern(pattern);
 		classFinder.setStopButton(getStopButton());
 		if (!classFinder.isAlive()) {
 			classFinder.start();
