@@ -1,0 +1,18 @@
+#!/bin/sh
+# Run BeanShell on thees file.
+//bin/true; exec java -classpath $(find $HOME/.gradle -name 'bsh*.jar' -print) bsh.Interpreter $(basename "$0") "$@"
+
+home = new File(System.getProperty("user.home"));
+cwd = new File(System.getProperty("user.dir"));
+os = System.getProperty("os.name");
+jar = new File(cwd, "build/libs/classfinder-1.1.jar");
+startScriptExt = os.contains("Windows") ? ".bat" : null;
+startScript = new File(cwd, "src/main/dist/classfinder" + startScriptExt);
+targetBin = new File(home, "bin");
+targetLib = new File(home, "lib");
+targetBin.createDirectory();
+targetLib.createDirectory();
+cp(startScript,targetBin);
+cp(jar,targetLib);
+
+
