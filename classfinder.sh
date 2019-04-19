@@ -9,31 +9,34 @@ die()
 
 findHighestJarVersion()
 {
-	find "$1" -name $2'*'.jar -printf "%h%P\n" | sort | tail -1
+	find "$1" -name "$2*.jar" -print | sort | tail -1
 }
 
 # Find relevant directories.
-SCRIPT_BASENAME=$(basename "$0")
-SCRIPT_DIR=$(dirname "$0"}
-if [ "$SCRIPT_DIR" = "." ]
+THIS_SCRIPT=$(basename "$0" .sh)
+THIS_DIR=$(dirname "$0")
+if [ "$THIS_DIR" = "." ]
 then
-	SCRIPT_DIR=$(pwd)
+	THIS_DIR=$(pwd)
 fi
-PARENT_DIR=$(dirname "$SCRIPT_DIR")
+PARENT_DIR=$(dirname "$THIS_DIR")
 LIB_DIR="$PARENT_DIR"/lib
+SHARE_DIR="$PARENT_DIR/share/java/$THIS_SCRIPT"
 
 OS=$(uname -s)
-unset ICON_SWITCH
 
 # Find the icon for Mac.
+unset MAC_ICON_SWITCH
 if [ "$OS" = 'Darwin' ]
 then
 	ICON_BASENAME=iconfinder_magnifier-data_532758-64x64.png
-	for ICON in "$LIB_DIR/$ICON_BASENAME" "$SCRIPT_DIR/src/main/resources/$ICON_BASENAME"
+	for ICON_DIR in "$THIS_DIR" "$LIB_DIR" "$SHARE_DIR" "$THIS_DIR/src/main/resources"
 	do
+		ICON="$ICON_DIR/$ICON_BASENAME"
 		if [ -f "$ICON" ] 
 		then
-    		ICON_SWITCH=-Xdock:icon="$ICON"
+			echo Using icon: $ICON
+    		MAC_ICON_SWITCH=-Xdock:icon="$ICON"
 			break
 		fi
 	done
@@ -41,11 +44,33 @@ fi
 
 # Find the application jar file.
 unset JAR
-for JAR_DIR in "$LIB_DIR" "$PARENT_DIR"/build/libs
+for JAR_DIR in "$THIS_DIR" "$LIB_DIR" "$SHARE_DIR" "$THIS_DIR"/build/libs
 do
-	JAR=$(findHighestJarVersion "$JAR_DIR" "$SCRIPT_BASENAME")
-	if [ -n "$JAR" ]
-		break
+	if [ -d "$JAR_DIR" ]
+	then
+		JAR=$(findHighestJarVersion "$JAR_DIR" "$THIS_SCRIPT")
+		if [ -n "$JAR" ]
+		then
+			echo Using jar: $JAR
+			break
+		fi
+	fi
+done
+
+# Try building it, if it wasn't found.
+if [ -z "$JAR" ]
+then
+	if [ -f "$THIS_DIR/build.gradle" ]
+	then
+		gradle build
+		if [ $? -eq 0 ]
+		then
+			JAR=$(findHighestJarVersion "$THIS_DIR/build/libs" "$THIS_SCRIPT")
+			if [ -n "$JAR" ]
+			then
+				echo Using jar: $JAR
+			fi
+		fi
 	fi
 fi
 
@@ -54,4 +79,10 @@ then
 	die Jar file not found
 fi
 
-exec java "$OPTS" -jar "$JAR" "$@"
+# Run
+if [ -z "$MAC_ICON_SWITCH" ]
+then
+	exec java -jar "$JAR" "$@"
+else
+	exec java "$MAC_ICON_SWITCH" -jar "$JAR" "$@"
+fi
