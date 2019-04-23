@@ -23,5 +23,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache-extras.beanshell:bsh:2.0b6'
+    // https://mvnrepository.com/artifact/org.apache-extras.beanshell/bsh
+    compile group: 'org.apache-extras.beanshell', name: 'bsh', version: '2.0b6'
 }
