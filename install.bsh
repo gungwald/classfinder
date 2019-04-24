@@ -1,18 +1,41 @@
 #!/bin/sh
-# Run BeanShell on thees file.
+# Run BeanShell on this file.
 //bin/true; exec java -classpath $(find $HOME/.gradle -name 'bsh*.jar' -print) bsh.Interpreter $(basename "$0") "$@"
 
+programToInstall = "classfinder";
+thisScript = new File(this.interpreter.getSourceFileInfo());
+
+// Install to user's home directory.
 home = new File(System.getProperty("user.home"));
 cwd = new File(System.getProperty("user.dir"));
 os = System.getProperty("os.name");
-jar = new File(cwd, "build/libs/classfinder-1.1.jar");
-startScriptExt = os.contains("Windows") ? ".bat" : null;
-startScript = new File(cwd, "src/main/dist/classfinder" + startScriptExt);
+
+jar = findHighestJar(new File(cwd, "build/libs"), programToInstall);
+runScriptExt = os.contains("Windows") ? ".bat" : null;
+runScript = new File(cwd, "src/main/dist/" + programToInstall + runScriptExt);
 targetBin = new File(home, "bin");
 targetLib = new File(home, "lib");
 targetBin.createDirectory();
 targetLib.createDirectory();
-cp(startScript,targetBin);
+cp(runScript,targetBin);
 cp(jar,targetLib);
 
+File findHighestJar(File dir, String name) {
+	File[] jars = dir.listFiles(new FilenameFilter(name));
+	Arrays.sort(jars);
+	return jars[jars.length - 1];
+}
+
+class JarFilter implements FilenameFilter {
+	private String nameToFind = null;
+	public JarFilter(String nameToFind) {
+		this.nameToFind = nameToFind;
+	}
+	public boolean accept(File dir, String name) {
+		if (name.startsWith(nameToFind) && name.endsWith(".jar"))
+			return true;
+		else
+			return false;
+	}
+}
 
