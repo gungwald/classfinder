@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -52,9 +53,14 @@ public class ClassFinderThread extends Thread {
     }
     
     public void run() {
-        setupForFind();
-        find(startDirectory, searchPattern);
-        cleanUpAfterFind();
+    	try {
+	        setupForFind();
+	        find(startDirectory, searchPattern);
+	        cleanUpAfterFind();
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		JOptionPane.showMessageDialog(this.results, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    	}
     }
 
     public void find(File searchIn, Pattern whatToFind) {
@@ -89,11 +95,22 @@ public class ClassFinderThread extends Thread {
             }
         }
         catch (Exception e) {
-            System.err.println("Failed to search " + searchIn + " for " + whatToFind.toString());
+            System.err.println("Failed to search " + toString(searchIn) + " for " + toString(whatToFind));
             e.printStackTrace();
             // Continue if one file causes an exception.
         }
     }
+    
+    public String toString(Object o) {
+    	String s;
+    	if (o == null) {
+    		s = "(null object)";
+    	} else {
+    		s = o.toString();
+    	}
+    	return s;
+    }
+    
     private File extractTmpJar(File searchIn, Pattern whatToFind, JarFile jarFile, JarEntry entry, String name) throws IOException {
         String jarFilePath = searchIn.getAbsolutePath();
         jarFilePath = jarFilePath.replaceAll("\\\\", "/");

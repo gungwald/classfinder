@@ -376,9 +376,9 @@ public class ClassFinder {
 		Pattern pattern = null;
 		String searchText = getSearchBox().getSelectedItem().toString().trim();
 		if (searchText.startsWith("/") && searchText.endsWith("/")) {
-			Pattern.compile(searchText, Pattern.CASE_INSENSITIVE);
+			pattern = Pattern.compile(searchText, Pattern.CASE_INSENSITIVE);
 		} else {
-			GlobPattern.compile(searchText, Pattern.CASE_INSENSITIVE);
+			pattern = GlobPattern.compile(searchText, Pattern.CASE_INSENSITIVE);
 		}
 		classFinder.setSearchPattern(pattern);
 		classFinder.setStopButton(getStopButton());
