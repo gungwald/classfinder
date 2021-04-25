@@ -2,6 +2,8 @@
 # Run BeanShell on this file.
 //bin/true; exec java -classpath $(find $HOME/.gradle -name 'bsh*.jar' -print) bsh.Interpreter $(basename "$0") "$@"
 
+# This really should be part of the Ant build.xml. See build.xml for classver.
+
 programToInstall = "classfinder";
 thisScript = new File(this.interpreter.getSourceFileInfo());
 
